@@ -1,0 +1,57 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  font-size: calc(1rem + 0.5vw);
+  line-height: 1.6;
+  color-scheme: light dark;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+}
+
+input,
+button {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 1rem;
+  text-wrap: balance;
+  line-height: 1.1;
+  letter-spacing: -0.0625rem;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+ul, menu {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: deeppink;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
