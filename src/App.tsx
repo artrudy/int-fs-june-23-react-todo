@@ -1,18 +1,61 @@
+import { useState } from "react";
 import styles from "./App.module.scss";
 
-function App() {
+type TodoItem = {
+  id: number;
+  task: string;
+  completed: boolean;
+};
+
+type TodoList = TodoItem[];
+
+function App(): TodoList{
+
+  const [todoList, setTodoList] = useState<TodoList>([{id:1, task: 'do smth', completed: false}]);
+  const [taskInput, setTaskInput] = useState<TodoItem>({ id: 0, task: '', completed: false });
+
+  const handleAddTodo = () => {
+    if (taskInput.task.trim() === '') return;
+    const newTodo: TodoItem = {
+      id: Date.now(),
+      task: taskInput.task,
+      completed: false
+    };
+    setTodoList(prevTodoList => [...prevTodoList, newTodo]);
+    setTaskInput({ id: 0, task: '', completed: false });
+  };
+  
+
+
   return (
     <main className={`${styles.readingZone} ${styles.flowContainer}`}>
-      <h1>TODO List</h1>
+      <h1>todo list</h1>
+
       <form name="addTodo" className={styles.addTodoForm}>
-        <h2>Create TODO</h2>
+        <h2>create todo</h2>
         <div className={styles.formControl}>
-          <label htmlFor="todo-description">Description</label>
-          <input type="text" id="todo-description" name="description" />
+          <label htmlFor="todo-description">description</label>
+          <input
+            type="text"
+            id="todo-description"
+            value={taskInput.task}
+            name="description"
+            onChange={e => setTaskInput({...taskInput, task: e.target.value})}
+          />
         </div>
-        <button className={styles.buttonPrimary}>➕ Add</button>
+        {console.log(todoList)}
+        <button type="button" onClick={handleAddTodo} className={styles.buttonPrimary}>➕ Add</button>
       </form>
+     
+
+
       <ul>
+        {todoList.map(todo => (
+          <li key={todo.id}>{ todo.task}</li>
+        ))}
+
+
+
         <li className={styles.todoItem}>
           <input type="checkbox" id="todo1-checkbox" checked />
           <label htmlFor="todo1-checkbox">Create a new project with vite</label>
