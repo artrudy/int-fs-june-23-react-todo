@@ -11,8 +11,26 @@ type TodoList = TodoItem[];
 
 function App(): TodoList{
 
-  const [todoList, setTodoList] = useState<TodoList>([{id:1, task: 'do smth', completed: false}]);
+  const [todoList, setTodoList] = useState<TodoList>([]);
+  
   const [taskInput, setTaskInput] = useState<TodoItem>({ id: 0, task: '', completed: false });
+
+  const [filter, setFilter] = useState<string>('All');
+
+  const handleFilter = (filterValue: string) => {
+    setFilter(filterValue);
+  }
+
+  const filteredTodoList = todoList.filter(todo => {
+    if (filter === 'All') {
+      return true;
+    } else if (filter === 'Open') {
+      return !todo.completed;
+    } else if (filter === 'Done') {
+      return todo.completed;
+    }
+    return true;
+  })
 
   const handleAddTodo = () => {
     if (taskInput.task.trim() === '') return;
@@ -24,9 +42,13 @@ function App(): TodoList{
     setTodoList(prevTodoList => [...prevTodoList, newTodo]);
     setTaskInput({ id: 0, task: '', completed: false });
   };
+
+  const handleTodoToggle = (id: number) => {
+    setTodoList(prevTodoList => prevTodoList.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    )
+    );
+  };
   
-
-
   return (
     <main className={`${styles.readingZone} ${styles.flowContainer}`}>
       <h1>todo list</h1>
@@ -43,40 +65,34 @@ function App(): TodoList{
             onChange={e => setTaskInput({...taskInput, task: e.target.value})}
           />
         </div>
-        {console.log(todoList)}
         <button type="button" onClick={handleAddTodo} className={styles.buttonPrimary}>➕ Add</button>
       </form>
      
-
-
       <ul>
-        {todoList.map(todo => (
-          <li key={todo.id}>{ todo.task}</li>
+        {filteredTodoList.map(todo => (
+          <li className={styles.todoItem} key={todo.id}>
+            <input 
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => handleTodoToggle(todo.id)}
+            /> 
+            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              {todo.task}
+            </span>
+          </li>
         ))}
 
-
-
-        <li className={styles.todoItem}>
-          <input type="checkbox" id="todo1-checkbox" checked />
-          <label htmlFor="todo1-checkbox">Create a new project with vite</label>
-        </li>
-        <li className={styles.todoItem}>
-          <input type="checkbox" id="todo2-checkbox" checked />
-          <label htmlFor="todo2-checkbox">npm install</label>
-        </li>
-        <li className={styles.todoItem}>
-          <input type="checkbox" id="todo3-checkbox" checked />
-          <label htmlFor="todo3-checkbox">npm run dev</label>
-        </li>
-        <li className={styles.todoItem}>
-          <input type="checkbox" id="todo4-checkbox" />
-          <label htmlFor="todo4-checkbox">Develop my app</label>
-        </li>
       </ul>
       <menu className={styles.filtersMenu}>
-        <li>All</li>
-        <li><a href="#">Open</a></li>
-        <li><a href="#">Done</a></li>
+        <li>
+          <button onClick={()=> handleFilter('All')}>All</button>
+        </li>
+        <li>
+          <button onClick={()=> handleFilter('Open')}>Open</button>
+        </li>
+        <li>
+          <button onClick={()=> handleFilter('Done')}>Done</button>
+        </li>
       </menu>
     </main>
   );
